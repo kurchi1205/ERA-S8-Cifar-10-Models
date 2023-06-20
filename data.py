@@ -1,8 +1,17 @@
+import torch
 from torchvision import datasets, transforms
 
 
+def get_transforms():
+    transform = transforms.Compose([
+                                    transforms.ToTensor(),
+                                    transforms.Normalize((0.5,), (0.25,))
+    ])
+    return transform
+    
 def get_data(train=False):
-    transforms = None
+    transforms = get_transforms()
+    print(transforms)
     if train:
         data = datasets.CIFAR10('./data', train=True, download=True, transform=transforms)
         return data
