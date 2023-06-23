@@ -48,7 +48,7 @@ def test(model, device, test_loader, test_losses, test_acc):
             test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
             pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
-
+                
     test_loss /= len(test_loader.dataset)
     test_losses.append(test_loss)
 
@@ -57,3 +57,18 @@ def test(model, device, test_loader, test_losses, test_acc):
         100. * correct / len(test_loader.dataset)))
 
     test_acc.append(100. * correct / len(test_loader.dataset))
+    
+    
+def infer(model, device, infer_loader, misclassified):
+    model.eval()
+    with torch.no_grad():
+        for i, (data, target) in enumerate(infer_loader):
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+            pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            correct = pred.eq(target.view_as(pred)).sum().item()
+            if (correct == 0):
+                misclassified.append(i)
+                if len(misclassified) == 10:
+                    break
+                
