@@ -195,13 +195,13 @@ class NetLN(nn.Module):
         x = self.pool1(x) # rin = 5 rout = 6
         x = self.trans_block1(x) # rin = 6 rout = 6
         x = self.conv_block3(x) # rin = 6 rout = 10
-        x = x + self.conv_block4(x) # rin = 10 rout = 14
-        x = x + self.conv_block5(x) # rin = 14 rout = 18
+        y = self.conv_block4(x) # rin = 10 rout = 14
+        x = x + self.conv_block5(y) # rin = 14 rout = 18
         x = self.pool2(x) # rin = 18 rout = 20
         x = self.trans_block2(x) # rin = 20 rout = 20
-        x = x + self.conv_block6(x) # rin = 20 rout = 28
-        x = x + self.conv_block7(x) # rin = 28 rout = 36
-        x = x + self.conv_block8(x) # rin = 36 rout = 44
+        x = self.conv_block6(x) # rin = 20 rout = 28
+        y = self.conv_block7(x) # rin = 28 rout = 36
+        x = x + self.conv_block8(y) # rin = 36 rout = 44
         x = self.gap(x) 
         x = self.out(x)
         x = x.view(-1, 10)
